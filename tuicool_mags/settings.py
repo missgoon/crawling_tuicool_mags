@@ -62,7 +62,7 @@ NEWSPIDER_MODULE = 'tuicool_mags.spiders'
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'tuicool_mags.pipelines.SomePipeline': 300,
+#    'tuicool_mags.pipelines.TuicoolMagsPipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
