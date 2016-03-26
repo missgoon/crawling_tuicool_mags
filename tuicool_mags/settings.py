@@ -52,6 +52,7 @@ NEWSPIDER_MODULE = 'tuicool_mags.spiders'
 DOWNLOADER_MIDDLEWARES = {
     # 'tuicool_mags.middlewares.MyCustomDownloaderMiddleware': 543,
     "tuicool_mags.middlewares.TuicoolHttpProxyMiddleware": 500,
+    "tuicool_mags.middlewares.TuicoolUserAgentMiddleware": 501,
 }
 
 # Enable or disable extensions
