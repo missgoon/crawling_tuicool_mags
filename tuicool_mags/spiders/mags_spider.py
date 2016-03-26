@@ -17,13 +17,19 @@ class MagsSpider(CrawlSpider):
   ]
   
   rules=(
+    Rule(LinkExtractor(allow=("http://www.tuicool.com/mags/.+/.+",)),callback="get_info_mag"),
     Rule(LinkExtractor(allow=("http://www.tuicool.com/mags",)),callback="parse_mag"),
     Rule(LinkExtractor(allow=("http://www.tuicool.com/articles",)),callback="parse_article"),
     )
 
   def parse_mag(self,response):
     sel=Selector(response=response)
+    print("22222222222")
+    print(response)
     item_li=sel.xpath("//div[@class='mag zhoukan_mag']")[0].xpath("./ul/li")
+    print("1111111111111111111111111111111111")
+    print(item)
+    asdfasdfasdfasdfa
     for li in item_li:
       item=MaganizeItem()
       item["href"]=li.xpath("./a/@href")[0].strip()
@@ -65,7 +71,7 @@ class MagsSpider(CrawlSpider):
       item["topic"]=item["topic"]+" "+a.xpath("./span/text()")[0]
     art_body_div=sel.xpath("//div[@class='article_body']/div")[0]
     item["article_body"]=lxml.html.tostring(art_body_div)
-  return item
+    return item
 
 
 
