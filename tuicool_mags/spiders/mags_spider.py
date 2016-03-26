@@ -49,23 +49,39 @@ class MagsSpider(CrawlSpider):
         item["mag_title"]=mag_title
         item["mag_datetime"]=mag_datetime
         item["belongto"]=belongto
-        item["tuicool_id"]=li.xpath("./h4/a/@href")[0].extract().split("/")[-1].strip()
+        item["tuicool_id"]=li.xpath("./h4/a/@href")[0].extract().split("=")[-1].strip()
+        print("2222222222222222222222222222")
+        print("2222222222222222222222222222")
+        print("2222222222222222222222222222")
+        print("2222222222222222222222222222")
+        print(li.xpath("./h4/a/@href")[0].extract())
+        print(item["tuicool_id"])
         yield scrapy.Request("http://www.tuicool.com/articles/"+item["tuicool_id"],self.parse_article,meta={"item":item})
 
   def parse_article(self,response):
-    sel=Selector(response)
-    item=response.meta["item"]
-    art_div=sel.xpath("//div[@class='span8 contant article_detail_bg']")[0]
-    item["title"]=art_div.xpath("./h1/text()")[0].extract().strip()
-    item["timetamp"]=art_div.xpath("./div[@class='article_meta']/div/span[@class='timestamp']/text()")[0].extract().strip()
-    item["site"]=art_div.xpath("./div[@class='article_meta']/div/span[@class='from']/a/text()")[0].extract().strip()
-    item["source"]=art_div.xpath("./div[@class='article_meta']/div[@class='source']/a/@href")[0].extract().strip()
-    item["topic"]=""
-    a_topic=art_div.xpath("./div[@class='article_meta']/div")[-1].xpath("./a")
-    for a in a_topic:
-      item["topic"]=item["topic"]+" "+a.xpath("./span/text()")[0].extract()
-    item["article_body"]=sel.xpath("//div[@class='article_body']/div")[0].extract()
-    return item
+    try:
+      sel=Selector(response)
+      item=response.meta["item"]
+      print("333333333333333333333")
+      print(sel.extract())
+      art_div=sel.xpath("//div[@class='span8 contant article_detail_bg']")[0]
+      item["title"]=art_div.xpath("./h1/text()")[0].extract().strip()
+      item["timetamp"]=art_div.xpath("./div[@class='article_meta']/div/span[@class='timestamp']/text()")[0].extract().strip()
+      item["site"]=art_div.xpath("./div[@class='article_meta']/div/span[@class='from']/a/text()")[0].extract().strip()
+      item["source"]=art_div.xpath("./div[@class='article_meta']/div[@class='source']/a/@href")[0].extract().strip()
+      item["topic"]=""
+      a_topic=art_div.xpath("./div[@class='article_meta']/div")[-1].xpath("./a")
+      for a in a_topic:
+        item["topic"]=item["topic"]+" "+a.xpath("./span/text()")[0].extract()
+      item["article_body"]=sel.xpath("//div[@class='article_body']/div")[0].extract()
+      return item
+    except Exception,e:
+      print(response)
+      print(item)
+      print(e)
+      print("there is a error...............")
+      return item
+
 
 
 
