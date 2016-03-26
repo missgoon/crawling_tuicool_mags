@@ -49,9 +49,10 @@ NEWSPIDER_MODULE = 'tuicool_mags.spiders'
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'tuicool_mags.middlewares.MyCustomDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    # 'tuicool_mags.middlewares.MyCustomDownloaderMiddleware': 543,
+    "tuicool_mags.middlewares.TuicoolHttpProxyMiddleware": 500,
+}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
