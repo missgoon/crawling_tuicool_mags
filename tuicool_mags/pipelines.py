@@ -8,9 +8,14 @@
 
 class TuicoolMagsPipeline(object):
     def __init__(self):
-        self.file=open("/root/tuicool_mags/articles.json","wb")
+        self.art_file=open("/root/tuicool_mags/articles.json","wb")
+        self.mag_file=open("/root/tuicool_mags/mags.json","wb")
 
     def process_item(self, item, spider):
         line=json.dumps(dict(item))+"\n"
-        self.file.write(line)
+        # self.file.write(line)
+        if item["tuicool_id"]:
+          self.art_file.write(line)
+        else:
+          self.mag_file.write(line)
         return item
