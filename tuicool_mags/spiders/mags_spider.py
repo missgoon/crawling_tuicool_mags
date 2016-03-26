@@ -24,53 +24,47 @@ class MagsSpider(CrawlSpider):
 
   def parse_mag(self,response):
     sel=Selector(response=response)
-    print("22222222222")
-    print(response)
     item_li=sel.xpath("//div[@class='mag zhoukan_mag']")[0].xpath("./ul/li")
-    print("1111111111111111111111111111111111")
-    print(item)
-    asdfasdfasdfasdfa
     for li in item_li:
       item=MaganizeItem()
-      item["href"]=li.xpath("./a/@href")[0].strip()
-      item["title"]=li.xpath("./a/span[@class='mag-title']/text()")[0].strip()
-      item["datetime"]=li.xpath("./a/span[@class='mag-tip']/text()")[0].strip()
+      item["href"]=li.xpath("./a/@href")[0].extract().strip()
+      item["title"]=li.xpath("./a/span[@class='mag-title']/text()")[0].extract().strip()
+      item["datetime"]=li.xpath("./a/span[@class='mag-tip']/text()")[0].extract().strip()
       yield item
-      yield scrapy.Request(item["href"],self.get_info_mag)
+      yield scrapy.Request("http://www.tuicool.com"+item["href"],self.get_info_mag)
 
   def get_info_mag(self,response):
     sel=Selector(response=response)
     mag_div=sel.xpath("//div[@class='mag mag_detail']")[0]
-    mag_title=mag_div.xpath("./div/h3/text()")[0].strip()
-    mag_datetime=mag_div.xpath("./div/h3/sub/text()")[0].strip()
+    mag_title=mag_div.xpath("./div/h3/text()")[0].extract().strip()
+    mag_datetime=mag_div.xpath("./div/h3/sub/text()")[0].extract().strip()
     article_ul=mag_div.xpath("./ul")
     article_ol=mag_div.xpath("./ol")
     for i in range(0,len(article_ol)):
       ul=article_ul[i]
       ol=article_ol[i] 
-      belongto=ul.xpath("./li/strong/text()")[0].strip()
+      belongto=ul.xpath("./li/strong/text()")[0].extract().strip()
       for li in ol.xpath("./li"):
         item=ArticleItem()
         item["mag_title"]=mag_title
         item["mag_datetime"]=mag_datetime
         item["belongto"]=belongto
-        item["tuicool_id"]=li.xpath("./h4/a/@href")[0].split("=")[-1].strip()
+        item["tuicool_id"]=li.xpath("./h4/a/@href")[0].extract().split("/")[-1].strip()
         yield scrapy.Request("http://www.tuicool.com/articles/"+item["tuicool_id"],self.parse_article,meta={"item":item})
 
   def parse_article(self,response):
     sel=Selector(response)
     item=response.meta["item"]
     art_div=sel.xpath("//div[@class='span8 contant article_detail_bg']")[0]
-    item["title"]=art_div.xpath("./h1/text()")[0].strip()
-    item["timetamp"]=art_div.xpath("./div[@class='article_meta']/div/span[@class='timestamp']/text()")[0].strip()
-    item["site"]=art_div.xpath("./div[@class='article_meta']/div/span[@class='from']/a/text()")[0].strip()
-    item["source"]=art_div.xpath("./div[@class='article_meta']/div[@class='source']/a/@href")[0].strip()
+    item["title"]=art_div.xpath("./h1/text()")[0].extract().strip()
+    item["timetamp"]=art_div.xpath("./div[@class='article_meta']/div/span[@class='timestamp']/text()")[0].extract().strip()
+    item["site"]=art_div.xpath("./div[@class='article_meta']/div/span[@class='from']/a/text()")[0].extract().strip()
+    item["source"]=art_div.xpath("./div[@class='article_meta']/div[@class='source']/a/@href")[0].extract().strip()
     item["topic"]=""
     a_topic=art_div.xpath("./div[@class='article_meta']/div")[-1].xpath("./a")
     for a in a_topic:
-      item["topic"]=item["topic"]+" "+a.xpath("./span/text()")[0]
-    art_body_div=sel.xpath("//div[@class='article_body']/div")[0]
-    item["article_body"]=lxml.html.tostring(art_body_div)
+      item["topic"]=item["topic"]+" "+a.xpath("./span/text()")[0].extract()
+    item["article_body"]=sel.xpath("//div[@class='article_body']/div")[0].extract()
     return item
 
 

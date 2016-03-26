@@ -10,6 +10,11 @@ class TuicoolMagsPipeline(object):
     def __init__(self):
         self.art_file=open("/root/tuicool_mags/articles.json","wb")
         self.mag_file=open("/root/tuicool_mags/mags.json","wb")
+        print("11111111111111111111111111111111")
+        print("11111111111111111111111111111111")
+        print("11111111111111111111111111111111")
+        print("11111111111111111111111111111111")
+        print(item)
 
     def process_item(self, item, spider):
         line=json.dumps(dict(item))+"\n"
